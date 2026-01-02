@@ -64,6 +64,15 @@ class Booking extends Model
             ->withTimestamps();
     }
 
+    // Helper to get primary room (first room)
+    public function room()
+    {
+        return $this->belongsToMany(Room::class, 'booking_rooms')
+            ->withPivot('room_rate', 'nights', 'subtotal')
+            ->withTimestamps()
+            ->limit(1);
+    }
+
     public function payments()
     {
         return $this->hasMany(Payment::class);

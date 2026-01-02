@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\GuestController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\HousekeepingController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\DashboardController;
 
 /*
@@ -29,8 +30,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
     // Rooms Management
-    Route::apiResource('rooms', RoomController::class);
     Route::get('/room-types', [RoomController::class, 'roomTypes']);
+    Route::get('/rooms-statistics', [RoomController::class, 'statistics']);
+    Route::apiResource('rooms', RoomController::class);
     Route::patch('/rooms/{room}/status', [RoomController::class, 'updateStatus']);
 
     // Guests Management
@@ -38,18 +40,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/guests/search/{query}', [GuestController::class, 'search']);
 
     // Bookings Management
+    Route::get('/bookings/check-availability', [BookingController::class, 'checkAvailability']);
     Route::apiResource('bookings', BookingController::class);
+    Route::post('/bookings/{booking}/confirm', [BookingController::class, 'confirm']);
     Route::post('/bookings/{booking}/check-in', [BookingController::class, 'checkIn']);
     Route::post('/bookings/{booking}/check-out', [BookingController::class, 'checkOut']);
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
-    Route::get('/bookings/check-availability', [BookingController::class, 'checkAvailability']);
 
     // Payments Management
     Route::apiResource('payments', PaymentController::class);
     Route::get('/bookings/{booking}/payments', [PaymentController::class, 'bookingPayments']);
 
     // Housekeeping Management
-    Route::apiResource('housekeeping-tasks', HousekeepingController::class);
-    Route::patch('/housekeeping-tasks/{task}/status', [HousekeepingController::class, 'updateStatus']);
-    Route::get('/housekeeping/dashboard', [HousekeepingController::class, 'dashboard']);
+    Route::get('/housekeeping-statistics', [HousekeepingController::class, 'statistics']);
+    Route::apiResource('housekeeping', HousekeepingController::class);
+    Route::patch('/housekeeping/{housekeeping}/status', [HousekeepingController::class, 'updateStatus']);
+
+    // Users Management
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
 });

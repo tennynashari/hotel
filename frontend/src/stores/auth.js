@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { authApi } from '../api'
+import axios from 'axios'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -37,12 +38,18 @@ export const useAuthStore = defineStore('auth', () => {
   async function checkAuth() {
     loading.value = true
     try {
+      // Ensure CSRF cookie is set
+      await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
+        withCredentials: true
+      })
+      
       const data = await authApi.getUser()
       user.value = data.user
       isAuthenticated.value = true
     } catch (error) {
       user.value = null
       isAuthenticated.value = false
+      throw error
     } finally {
       loading.value = false
     }

@@ -6,12 +6,15 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
   },
 })
 
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
+    // Don't set Referer header - it's unsafe and browser won't allow it
+    // Sanctum will work with CORS and credentials already configured
     return config
   },
   (error) => {
@@ -25,9 +28,19 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
+    // Handle 419 CSRF token mismatch
+    if (error.response?.status === 419) {
+      console.error('CSRF token mismatch')
+    }
+    
+    // Handle 401 Unauthenticated
     if (error.response?.status === 401) {
-      // Redirect to login if unauthorized
-      window.location.href = '/login'
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/login') {
+        console.error('Unauthenticated - redirecting to login')
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

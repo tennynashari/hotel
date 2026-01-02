@@ -5,6 +5,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/TestView.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
@@ -46,17 +51,18 @@ const router = createRouter({
       component: () => import('../views/HousekeepingView.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/payments',
+      name: 'payments',
+      component: () => import('../views/PaymentsView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
 // Navigation guard
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-
-  // Check if user is authenticated
-  if (!authStore.user && !authStore.loading) {
-    await authStore.checkAuth()
-  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'login' })

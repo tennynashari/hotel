@@ -1,7 +1,29 @@
 <template>
   <div class="min-h-screen bg-gray-100">
+    <!-- Mobile Menu Button -->
+    <button
+      @click="sidebarOpen = !sidebarOpen"
+      class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-blue-600 text-white shadow-lg"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Overlay -->
+    <div
+      v-if="sidebarOpen"
+      @click="sidebarOpen = false"
+      class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+    ></div>
+
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-10">
+    <div
+      :class="[
+        'fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-30 transform transition-transform duration-300',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      ]"
+    >
       <div class="flex flex-col h-full">
         <!-- Logo -->
         <div class="flex items-center justify-center h-16 bg-blue-600 text-white font-bold text-xl">
@@ -63,6 +85,17 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
             Housekeeping
+          </router-link>
+
+          <router-link
+            to="/payments"
+            class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            active-class="bg-blue-50 text-blue-600 font-medium"
+          >
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Payments
           </router-link>
         </nav>
 

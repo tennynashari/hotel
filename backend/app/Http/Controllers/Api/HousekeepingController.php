@@ -115,6 +115,11 @@ class HousekeepingController extends Controller
 
         if ($validated['status'] === 'in_progress' && !$housekeeping->started_at) {
             $updates['started_at'] = now();
+            
+            // Update room status to cleaning when task starts
+            if ($housekeeping->task_type === 'cleaning') {
+                $housekeeping->room->update(['status' => 'cleaning']);
+            }
         }
 
         if ($validated['status'] === 'completed') {

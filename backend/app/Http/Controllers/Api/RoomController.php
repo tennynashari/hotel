@@ -66,6 +66,7 @@ class RoomController extends Controller
             'room_type_id' => 'sometimes|exists:room_types,id',
             'room_number' => 'sometimes|unique:rooms,room_number,' . $room->id,
             'floor' => 'nullable|string|max:10',
+            'status' => 'sometimes|in:available,occupied,dirty,cleaning,out_of_order',
             'notes' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
